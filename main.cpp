@@ -2,7 +2,7 @@
 #include "Matrix4x4.h"
 #include "Matrix.h"
 
-const char kWindowTitle[] = "GC2B_14_ハラ_アイ";
+const char kWindowTitle[] = "GC2B_14_ハラ_アイ_修正版";
 
 static const int kRowHeight = 20;
 static const int kColumnWidth = 60;
