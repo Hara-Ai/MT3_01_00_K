@@ -31,6 +31,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		{0.5f, -0.5f, 0.0f}
 	};
 
+	Triangle t = {
+		{0.0f, 0.5f, 0.0f},
+		{-0.5f, -0.5f, 0.0f},
+		{0.5f, -0.5f, 0.0f}
+	};
+
 	auto start = std::chrono::high_resolution_clock::now();
 
 	// キー入力結果を受け取る箱
@@ -51,10 +57,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		//移動の更新処理
-		if (keys[DIK_W]) translate.z += 0.01f;
-		if (keys[DIK_S]) translate.z -= 0.01f;
-		if (keys[DIK_A]) translate.x -= 0.01f;
-		if (keys[DIK_D]) translate.x += 0.01f;
+		if (keys[DIK_W])
+		{
+			translate.z += 0.01f;
+		}
+
+		if (keys[DIK_S])
+		{
+			translate.z -= 0.01f;
+		}
+		
+		if (keys[DIK_A])
+		{
+			translate.x -= 0.01f;
+		}
+
+
+		if (keys[DIK_D])
+		{
+			translate.x += 0.01f;
+		}
 
 		// Y軸回転
 		auto now = std::chrono::high_resolution_clock::now();
@@ -83,15 +105,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		Novice::DrawTriangle
-		(
-			int(screenVertices[0].x), int(screenVertices[0].y),
-			int(screenVertices[1].x), int(screenVertices[1].y),
-			int(screenVertices[2].x), int(screenVertices[2].y),
-			RED, kFillModeWireFrame
-		);
+		//Novice::DrawTriangle
+		//(
+		//	int(screenVertices[0].x), int(screenVertices[0].y),
+		//	int(screenVertices[1].x), int(screenVertices[1].y),
+		//	int(screenVertices[2].x), int(screenVertices[2].y),
+		//	RED, kFillModeWireFrame
+		//);
 
-		//DrowTriangle(ndcVertex, worldViewProjectionMatrix, viewportMatrix, WHITE);
+
+		DrowTriangle(t, worldViewProjectionMatrix, viewportMatrix, WHITE);
 
 		VectorScreenPrintf(0, 0, cross, "Cross");
 
@@ -112,3 +135,4 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Novice::Finalize();
 	return 0;
 }
+

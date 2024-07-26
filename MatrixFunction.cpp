@@ -351,9 +351,9 @@ void DrowTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatri
 
 		Vector3 screenVertices[3] =
 		{
-			Transform(Transform(triangle.vertice[0],viewProjectionMatrix), viewportMatrix),
-			Transform(Transform(triangle.vertice[1],viewProjectionMatrix), viewportMatrix),
-			Transform(Transform(triangle.vertice[2],viewProjectionMatrix), viewportMatrix),
+			Transform_2(Transform_2(triangle.vertice[0],viewProjectionMatrix), viewportMatrix),
+			Transform_2(Transform_2(triangle.vertice[1],viewProjectionMatrix), viewportMatrix),
+			Transform_2(Transform_2(triangle.vertice[2],viewProjectionMatrix), viewportMatrix)
 		};
 
 		Novice::DrawTriangle
