@@ -18,30 +18,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Vector3 v1{ 1.2f, -3.9f, 2.5f };
 	Vector3 v2{ 2.8f, 0.4f, -1.3f };
-	Vector3 cameraPosition{ 0.0f,0.0f,0.0f };
-	Vector3 rotate{};
+	Vector3 cameraPosition{ 0.0f,0.0f,-5.0f };
+	Vector3 rotate{ 0.0f,0.0f,0.0f };
 	Vector3 translate{};
 
 	Vector3 cross = Cross(v1, v2);
 
-	//Vector3 vertices[3] =
-	//{
-	//	{0.0f, 0.5f, 0.0f},
-	//	{-0.5f, -0.5f, 0.0f},
-	//	{0.5f, -0.5f, 0.0f}
-	//};
-
-	Triangle t = {
+	Vector3 vertices[3] =
+	{
 		{0.0f, 0.5f, 0.0f},
 		{-0.5f, -0.5f, 0.0f},
 		{0.5f, -0.5f, 0.0f}
 	};
 
+
 	auto start = std::chrono::high_resolution_clock::now();
 
 	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -66,7 +61,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		{
 			translate.z -= 0.01f;
 		}
-		
+
 		if (keys[DIK_A])
 		{
 			translate.x -= 0.01f;
@@ -88,14 +83,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 cameraMatrix = MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, cameraPosition);
 		Matrix4x4 viewMatrix = Inverse(cameraMatrix);
 		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
-		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+		Matrix4x4 worldViewProjectionMatrix = Multiply(viewMatrix, projectionMatrix);
 		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
-		//Vector3 screenVertices[3];
+		Vector3 screenVertices[3] = {};
 
 		//for (uint32_t i = 0; i < 3; ++i)
 		//{
-		//	Vector3 ndcVertex = Transform_2(vertices[i], worldViewProjectionMatrix);
-		//	screenVertices[i] = Transform_2(ndcVertex, viewportMatrix);
+		//	Vector3 ndcVertex = Transform(vertices[i], worldViewProjectionMatrix);
+		//	screenVertices[i] = Transform(ndcVertex, viewportMatrix);
 		//}
 
 		///
@@ -106,10 +101,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		DrowTriangle(t, projectionMatrix, viewportMatrix, WHITE);
+
+		Novice::DrawTriangle
+		(
+			int(screenVertices[0].x), int(screenVertices[0].y),
+			int(screenVertices[1].x), int(screenVertices[1].y),
+			int(screenVertices[2].x), int(screenVertices[2].y),
+			RED, kFillModeSolid
+		);
+
 
 		VectorScreenPrintf(0, 0, cross, "Cross");
 
+		MatrixScreenPrintf(0, 30, worldViewProjectionMatrix);
 		///
 		/// ↑描画処理ここまで
 		///

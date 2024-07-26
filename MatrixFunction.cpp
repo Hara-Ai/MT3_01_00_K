@@ -163,8 +163,10 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate)
 Matrix4x4 MakeScaleMatrix(const Vector3& scale)
 {
 	return {
-	  scale.x, 0.0f, 0.0f,    0.0f, 0.0f, scale.y, 0.0f, 0.0f,
-	  0.0f,    0.0f, scale.z, 0.0f, 0.0f, 0.0f,    0.0f, 1.0f,
+	  scale.x, 0.0f, 0.0f,   0.0f,
+	  0.0f, scale.y, 0.0f, 0.0f,
+	  0.0f, 0.0f, scale.z, 0.0f, 
+	  0.0f, 0.0f,  0.0f, 1.0f,
 	};
 }
 Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix)
@@ -223,12 +225,11 @@ Matrix4x4 MakeRotateZMatrix(float radian) {
 	return result;
 }
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
-	Matrix4x4 result;
+	Matrix4x4 result = {};
 
-	for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			result.m[i][j] = 0;
-			for (int k = 0; k < 4; ++k) {
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			for (int k = 0; k < 4; k++) {
 				result.m[i][j] += m1.m[i][k] * m2.m[k][j];
 			}
 		}
@@ -270,12 +271,14 @@ Matrix4x4 operator*(const Matrix4x4& a, const Matrix4x4& b)
 }
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate)
 {
+
+	Matrix4x4 result = {};
 	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
 	Matrix4x4 rotationMatrix = MakeRotationMatrix(rotate);
 	Matrix4x4 translationMatrix = MakeTranslationMatrix(translate);
+	result = Multiply(scaleMatrix,rotationMatrix);
 
-	Matrix4x4 affineMatrix = scaleMatrix * rotationMatrix * translationMatrix;
-	return affineMatrix;
+	return result;
 }
 
 
@@ -288,7 +291,7 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip
 	Matrix4x4 matrix = {};
 	float tanHalfFovY = tanf(fovY / 2.0f);
 
-	matrix.m[0][0] = 1.0f / (aspectRatio * tanHalfFovY);
+	matrix.m[0][0] = aspectRatio / (1/tanHalfFovY);
 	matrix.m[1][1] = 1.0f / tanHalfFovY;
 	matrix.m[2][2] = farClip / (farClip - nearClip);
 	matrix.m[2][3] = 1.0f;
@@ -303,9 +306,9 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 	matrix.m[0][0] = 2.0f / (right - left);
 	matrix.m[1][1] = 2.0f / (top - bottom);
 	matrix.m[2][2] = 1.0f / (farClip - nearClip);
-	matrix.m[3][0] = -(right + left) / (right - left);
-	matrix.m[3][1] = -(top + bottom) / (top - bottom);
-	matrix.m[3][2] = -nearClip / (farClip - nearClip);
+	matrix.m[3][0] = (right + left) / (left - right);
+	matrix.m[3][1] = (top + bottom) / (bottom - top);
+	matrix.m[3][2] = nearClip / (nearClip - farClip);
 	matrix.m[3][3] = 1.0f;
 
 	return matrix;
@@ -351,9 +354,9 @@ void DrowTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatri
 
 		Vector3 screenVertices[3] =
 		{
-			Transform_2(Transform_2(triangle.vertice[0],viewProjectionMatrix), viewportMatrix),
-			Transform_2(Transform_2(triangle.vertice[1],viewProjectionMatrix), viewportMatrix),
-			Transform_2(Transform_2(triangle.vertice[2],viewProjectionMatrix), viewportMatrix)
+			Transform(Transform(triangle.vertice[0],viewProjectionMatrix), viewportMatrix),
+			Transform(Transform(triangle.vertice[1],viewProjectionMatrix), viewportMatrix),
+			Transform(Transform(triangle.vertice[2],viewProjectionMatrix), viewportMatrix)
 		};
 
 		Novice::DrawTriangle
