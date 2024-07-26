@@ -325,3 +325,44 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 	return matrix;
 }
 
+////
+// 01_01
+////
+
+// ベクトルのクロス積を計算
+Vector3 Cross(const Vector3& v1, const Vector3& v2) {
+	return {
+		v1.y * v2.z - v1.z * v2.y,
+		v1.z * v2.x - v1.x * v2.z,
+		v1.x * v2.y - v1.y * v2.x
+	};
+}
+// ベクトルを変換
+Vector3 Transform_2(const Vector3& v, const Matrix4x4& m) {
+	Vector3 result = {};
+	result.x = v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + m.m[3][0];
+	result.y = v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + m.m[3][1];
+	result.z = v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2] + m.m[3][2];
+	return result;
+}
+void DrowTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color)
+{
+	{
+
+		Vector3 screenVertices[3] =
+		{
+			Transform(Transform(triangle.vertice[0],viewProjectionMatrix), viewportMatrix),
+			Transform(Transform(triangle.vertice[1],viewProjectionMatrix), viewportMatrix),
+			Transform(Transform(triangle.vertice[2],viewProjectionMatrix), viewportMatrix),
+		};
+
+		Novice::DrawTriangle
+		(
+			int(screenVertices[0].x), int(screenVertices[0].y),
+			int(screenVertices[1].x), int(screenVertices[1].y),
+			int(screenVertices[2].x), int(screenVertices[2].y),
+			color, kFillModeWireFrame
+		);
+
+	}
+}
