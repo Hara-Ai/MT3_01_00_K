@@ -24,12 +24,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Vector3 cross = Cross(v1, v2);
 
-	Vector3 vertices[3] =
-	{
-		{0.0f, 0.5f, 0.0f},
-		{-0.5f, -0.5f, 0.0f},
-		{0.5f, -0.5f, 0.0f}
-	};
+	//Vector3 vertices[3] =
+	//{
+	//	{0.0f, 0.5f, 0.0f},
+	//	{-0.5f, -0.5f, 0.0f},
+	//	{0.5f, -0.5f, 0.0f}
+	//};
 
 	Triangle t = {
 		{0.0f, 0.5f, 0.0f},
@@ -90,12 +90,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
 		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
-		Vector3 screenVertices[3];
-		for (uint32_t i = 0; i < 3; ++i)
-		{
-			Vector3 ndcVertex = Transform_2(vertices[i], worldViewProjectionMatrix);
-			screenVertices[i] = Transform_2(ndcVertex, viewportMatrix);
-		}
+		//Vector3 screenVertices[3];
+
+		//for (uint32_t i = 0; i < 3; ++i)
+		//{
+		//	Vector3 ndcVertex = Transform_2(vertices[i], worldViewProjectionMatrix);
+		//	screenVertices[i] = Transform_2(ndcVertex, viewportMatrix);
+		//}
 
 		///
 		/// ↑更新処理ここまで
@@ -105,16 +106,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		//Novice::DrawTriangle
-		//(
-		//	int(screenVertices[0].x), int(screenVertices[0].y),
-		//	int(screenVertices[1].x), int(screenVertices[1].y),
-		//	int(screenVertices[2].x), int(screenVertices[2].y),
-		//	RED, kFillModeWireFrame
-		//);
-
-
-		DrowTriangle(t, worldViewProjectionMatrix, viewportMatrix, WHITE);
+		DrowTriangle(t, projectionMatrix, viewportMatrix, WHITE);
 
 		VectorScreenPrintf(0, 0, cross, "Cross");
 

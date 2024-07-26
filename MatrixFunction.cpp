@@ -347,7 +347,7 @@ Vector3 Transform_2(const Vector3& v, const Matrix4x4& m) {
 }
 void DrowTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color)
 {
-	{
+	
 
 		Vector3 screenVertices[3] =
 		{
@@ -364,5 +364,5 @@ void DrowTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatri
 			color, kFillModeWireFrame
 		);
 
-	}
+	
 }
